@@ -141,6 +141,26 @@ const getListingsPaginated = async (event: any, listingType: string) => {
     }
 }
 
+const getListing = async (event: any) => {
+    
+    const listingId = event.pathParameters.id
+    const listing = await getItem(LISTING_DDB_TABLE, listingId, logger)
+    logger.info({listing}, "Retrieved Listing");
+    if (!listing) {
+        return {
+            statusCode: 404,
+            body: JSON.stringify({"message": `No listing found for id: ${listingId}`}),
+            headers: corsHeaders
+        };
+    };
+    const cleanedListing = cleanListing(listing as Listing)
+    return {
+        statusCode: 200,
+        body: JSON.stringify(cleanedListing),
+        headers: corsHeaders
+    };
+}
+
 const deleteListing = async (event: any) => {
     // Assert ID provided
     if (!event.pathParameters) {
@@ -199,10 +219,13 @@ export const handler = async (event: any) => {
     switch(httpMethod) {
         case "GET":
             if (event.path === "/listings/offer") {
-                return  await getListingsPaginated(event, "offer")
+                return await getListingsPaginated(event, "offer")
             }
             if (event.path === "/listings/request") {
-                return  await getListingsPaginated(event, "request")
+                return await getListingsPaginated(event, "request")
+            }
+            if (event.pathParameters.id) {
+                return await getListing(event)
             }
             return {
                 statusCode: 500,

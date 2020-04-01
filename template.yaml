@@ -132,3 +132,8 @@ Resources:
           Properties:
             Path: /listings/{id}
             Method: delete
+        ListingGet:
+          Type: Api
+          Properties:
+            Path: /listings/{id}
+            Method: get

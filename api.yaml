@@ -50,25 +50,23 @@ paths:
         '404':
           description: The listing does not exist.
 
-    post:
-      summary: Create an Listing.
-      operationId: CreateListing
-      description: Create an Listing
+    get:
+      summary: Get a listing
+      operationId: GetListing
+      description: Gets a listing
       tags:
       - listing
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateListing'
+      parameters:
+        - $ref: '#/components/parameters/id'
       responses:
-        '201':
+        '200':
           description: listing response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Listing'
+                $ref: '#/components/schemas/ReadListing'
+        '404':
+          description: The listing does not exist.
                 
   /listings/offer:
     get:
